@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAppContext } from '../context/AppContext';
-import useLocalStorage from '../hooks/useLocalStorage';
-import apiService from '../services/apiService';
+import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../context/AppContext";
+import useLocalStorage from "../hooks/useLocalStorage";
+import apiService from "../services/apiService";
 
 function Registro() {
   const navigate = useNavigate();
@@ -11,11 +11,11 @@ function Registro() {
 
   // Estados para el formulario controlado
   const [formData, setFormData] = useState({
-    titulo: '',
-    descripcion: '',
-    categoria: '',
-    prioridad: '',
-    usuario: user.name
+    titulo: "",
+    descripcion: "",
+    categoria: "",
+    prioridad: "",
+    usuario: user.name,
   });
 
   // Estados para validación
@@ -26,7 +26,7 @@ function Registro() {
   const [loading, setLoading] = useState(false);
 
   // Custom Hook para guardar borrador en localStorage
-  const [draft, saveDraft] = useLocalStorage('ticket-draft', null);
+  const [draft, saveDraft] = useLocalStorage("ticket-draft", null);
 
   // useEffect para enfocar el primer campo al cargar
   useEffect(() => {
@@ -37,7 +37,7 @@ function Registro() {
     // Cargar borrador si existe
     if (draft) {
       setFormData(draft);
-      addNotification('Se ha restaurado un borrador guardado', 'info');
+      addNotification("Se ha restaurado un borrador guardado", "info");
     }
   }, []);
 
@@ -50,38 +50,38 @@ function Registro() {
 
   // Validación de campos
   const validateField = (name, value) => {
-    let error = '';
+    let error = "";
 
     switch (name) {
-      case 'titulo':
+      case "titulo":
         if (!value.trim()) {
-          error = 'El título es obligatorio';
+          error = "El título es obligatorio";
         } else if (value.trim().length < 5) {
-          error = 'El título debe tener al menos 5 caracteres';
+          error = "El título debe tener al menos 5 caracteres";
         } else if (value.trim().length > 100) {
-          error = 'El título no puede exceder 100 caracteres';
+          error = "El título no puede exceder 100 caracteres";
         }
         break;
 
-      case 'descripcion':
+      case "descripcion":
         if (!value.trim()) {
-          error = 'La descripción es obligatoria';
+          error = "La descripción es obligatoria";
         } else if (value.trim().length < 10) {
-          error = 'La descripción debe tener al menos 10 caracteres';
+          error = "La descripción debe tener al menos 10 caracteres";
         } else if (value.trim().length > 500) {
-          error = 'La descripción no puede exceder 500 caracteres';
+          error = "La descripción no puede exceder 500 caracteres";
         }
         break;
 
-      case 'categoria':
+      case "categoria":
         if (!value) {
-          error = 'Debes seleccionar una categoría';
+          error = "Debes seleccionar una categoría";
         }
         break;
 
-      case 'prioridad':
+      case "prioridad":
         if (!value) {
-          error = 'Debes seleccionar una prioridad';
+          error = "Debes seleccionar una prioridad";
         }
         break;
 
@@ -95,8 +95,8 @@ function Registro() {
   // Validar todos los campos
   const validateForm = () => {
     const newErrors = {};
-    Object.keys(formData).forEach(key => {
-      if (key !== 'usuario') {
+    Object.keys(formData).forEach((key) => {
+      if (key !== "usuario") {
         const error = validateField(key, formData[key]);
         if (error) {
           newErrors[key] = error;
@@ -109,18 +109,18 @@ function Registro() {
   // Manejar cambios en inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
-    setFormData(prev => ({
+
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
     // Validar campo si ya fue tocado
     if (touched[name]) {
       const error = validateField(name, value);
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: error
+        [name]: error,
       }));
     }
   };
@@ -128,16 +128,16 @@ function Registro() {
   // Manejar blur (cuando el usuario sale del campo)
   const handleBlur = (e) => {
     const { name, value } = e.target;
-    
-    setTouched(prev => ({
+
+    setTouched((prev) => ({
       ...prev,
-      [name]: true
+      [name]: true,
     }));
 
     const error = validateField(name, value);
-    setErrors(prev => ({
+    setErrors((prev) => ({
       ...prev,
-      [name]: error
+      [name]: error,
     }));
   };
 
@@ -147,7 +147,7 @@ function Registro() {
 
     // Marcar todos los campos como tocados
     const allTouched = {};
-    Object.keys(formData).forEach(key => {
+    Object.keys(formData).forEach((key) => {
       allTouched[key] = true;
     });
     setTouched(allTouched);
@@ -158,7 +158,10 @@ function Registro() {
 
     // Si hay errores, no enviar
     if (Object.keys(formErrors).length > 0) {
-      addNotification('Por favor corrige los errores en el formulario', 'warning');
+      addNotification(
+        "Por favor corrige los errores en el formulario",
+        "warning"
+      );
       return;
     }
 
@@ -166,29 +169,32 @@ function Registro() {
     setLoading(true);
     try {
       const response = await apiService.add(formData);
-      
-      addNotification('¡Ticket creado exitosamente!', 'success');
-      
+
+      addNotification("¡Ticket creado exitosamente!", "success");
+
       // Limpiar formulario
       setFormData({
-        titulo: '',
-        descripcion: '',
-        categoria: '',
-        prioridad: '',
-        usuario: user.name
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        prioridad: "",
+        usuario: user.name,
       });
       setErrors({});
       setTouched({});
-      
+
       // Limpiar borrador
       saveDraft(null);
 
       // Redirigir a la lista
       setTimeout(() => {
-        navigate('/lista');
+        navigate("/lista");
       }, 1500);
     } catch (error) {
-      addNotification('Error al crear el ticket. Por favor intenta nuevamente.', 'danger');
+      addNotification(
+        "Error al crear el ticket. Por favor intenta nuevamente.",
+        "danger"
+      );
     } finally {
       setLoading(false);
     }
@@ -197,11 +203,11 @@ function Registro() {
   // Limpiar formulario
   const handleReset = () => {
     setFormData({
-      titulo: '',
-      descripcion: '',
-      categoria: '',
-      prioridad: '',
-      usuario: user.name
+      titulo: "",
+      descripcion: "",
+      categoria: "",
+      prioridad: "",
+      usuario: user.name,
     });
     setErrors({});
     setTouched({});
@@ -214,7 +220,7 @@ function Registro() {
       <div className="col-lg-8 mx-auto">
         <div className="card shadow-lg border-0">
           <div className="card-header bg-primary text-white">
-            <h3 className="mb-0">➕ Crear Nuevo Ticket</h3>
+            <h3 className="mb-0">Crear Nuevo Ticket</h3>
           </div>
           <div className="card-body p-4">
             <form onSubmit={handleSubmit} noValidate>
@@ -237,7 +243,13 @@ function Registro() {
                 <input
                   ref={tituloRef}
                   type="text"
-                  className={`form-control ${errors.titulo && touched.titulo ? 'is-invalid' : ''} ${!errors.titulo && touched.titulo && formData.titulo ? 'is-valid' : ''}`}
+                  className={`form-control ${
+                    errors.titulo && touched.titulo ? "is-invalid" : ""
+                  } ${
+                    !errors.titulo && touched.titulo && formData.titulo
+                      ? "is-valid"
+                      : ""
+                  }`}
                   id="titulo"
                   name="titulo"
                   value={formData.titulo}
@@ -257,10 +269,21 @@ function Registro() {
               {/* Descripción */}
               <div className="mb-3">
                 <label htmlFor="descripcion" className="form-label">
-                  Descripción del Problema <span className="text-danger">*</span>
+                  Descripción del Problema{" "}
+                  <span className="text-danger">*</span>
                 </label>
                 <textarea
-                  className={`form-control ${errors.descripcion && touched.descripcion ? 'is-invalid' : ''} ${!errors.descripcion && touched.descripcion && formData.descripcion ? 'is-valid' : ''}`}
+                  className={`form-control ${
+                    errors.descripcion && touched.descripcion
+                      ? "is-invalid"
+                      : ""
+                  } ${
+                    !errors.descripcion &&
+                    touched.descripcion &&
+                    formData.descripcion
+                      ? "is-valid"
+                      : ""
+                  }`}
                   id="descripcion"
                   name="descripcion"
                   value={formData.descripcion}
@@ -284,7 +307,13 @@ function Registro() {
                   Categoría <span className="text-danger">*</span>
                 </label>
                 <select
-                  className={`form-select ${errors.categoria && touched.categoria ? 'is-invalid' : ''} ${!errors.categoria && touched.categoria && formData.categoria ? 'is-valid' : ''}`}
+                  className={`form-select ${
+                    errors.categoria && touched.categoria ? "is-invalid" : ""
+                  } ${
+                    !errors.categoria && touched.categoria && formData.categoria
+                      ? "is-valid"
+                      : ""
+                  }`}
                   id="categoria"
                   name="categoria"
                   value={formData.categoria}
@@ -309,7 +338,13 @@ function Registro() {
                   Prioridad <span className="text-danger">*</span>
                 </label>
                 <select
-                  className={`form-select ${errors.prioridad && touched.prioridad ? 'is-invalid' : ''} ${!errors.prioridad && touched.prioridad && formData.prioridad ? 'is-valid' : ''}`}
+                  className={`form-select ${
+                    errors.prioridad && touched.prioridad ? "is-invalid" : ""
+                  } ${
+                    !errors.prioridad && touched.prioridad && formData.prioridad
+                      ? "is-valid"
+                      : ""
+                  }`}
                   id="prioridad"
                   name="prioridad"
                   value={formData.prioridad}
@@ -317,10 +352,10 @@ function Registro() {
                   onBlur={handleBlur}
                 >
                   <option value="">Selecciona la prioridad</option>
-                  <option value="baja">🟢 Baja</option>
-                  <option value="media">🟡 Media</option>
-                  <option value="alta">🟠 Alta</option>
-                  <option value="critica">🔴 Crítica</option>
+                  <option value="baja">Baja</option>
+                  <option value="media">Media</option>
+                  <option value="alta">Alta</option>
+                  <option value="critica">Crítica</option>
                 </select>
                 {errors.prioridad && touched.prioridad && (
                   <div className="invalid-feedback">{errors.prioridad}</div>
@@ -336,11 +371,15 @@ function Registro() {
                 >
                   {loading ? (
                     <>
-                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
                       Creando...
                     </>
                   ) : (
-                    '✓ Crear Ticket'
+                    "✓ Crear Ticket"
                   )}
                 </button>
                 <button
@@ -349,7 +388,7 @@ function Registro() {
                   onClick={handleReset}
                   disabled={loading}
                 >
-                  🔄 Limpiar
+                  Limpiar
                 </button>
               </div>
             </form>
@@ -357,7 +396,10 @@ function Registro() {
         </div>
 
         {/* Notificaciones */}
-        <div className="position-fixed bottom-0 end-0 p-3" style={{ zIndex: 11 }}>
+        <div
+          className="position-fixed bottom-0 end-0 p-3"
+          style={{ zIndex: 11 }}
+        >
           {/* Las notificaciones se manejan en el contexto */}
         </div>
       </div>

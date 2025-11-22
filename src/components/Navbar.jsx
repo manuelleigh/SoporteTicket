@@ -1,11 +1,11 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 function Navbar() {
   const location = useLocation();
 
   const isActive = (path) => {
-    return location.pathname === path ? 'active' : '';
+    return location.pathname === path ? "active" : "";
   };
 
   return (
@@ -25,18 +25,21 @@ function Navbar() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <Link className={`nav-link ${isActive('/')}`} to="/">
-                🏠 Inicio
+              <Link className={`nav-link ${isActive("/")}`} to="/">
+                Inicio
               </Link>
             </li>
             <li className="nav-item">
-              <Link className={`nav-link ${isActive('/registro')}`} to="/registro">
-                ➕ Crear Ticket
+              <Link
+                className={`nav-link ${isActive("/registro")}`}
+                to="/registro"
+              >
+                Crear Ticket
               </Link>
             </li>
             <li className="nav-item">
-              <Link className={`nav-link ${isActive('/lista')}`} to="/lista">
-                📋 Mis Tickets
+              <Link className={`nav-link ${isActive("/lista")}`} to="/lista">
+                Mis Tickets
               </Link>
             </li>
           </ul>

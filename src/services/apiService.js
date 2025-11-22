@@ -1,7 +1,5 @@
 import axios from "axios";
 
-const BASE_URL = "https://jsonplaceholder.typicode.com";
-
 let localTickets = [];
 let nextId = 1;
 
@@ -143,27 +141,17 @@ const apiService = {
   },
 
   /**
-   * Eliminar un ticket
+   * Eliminar un ticket por ID
    * @param {number} id - ID del ticket a eliminar
-   * @returns {Promise<Object>} Resultado de la operación
+   * @returns {Promise<void>} Confirmación de eliminación
    */
   remove: async (id) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // Simular delay de red
+      await new Promise((resolve) => setTimeout(resolve, 600));
 
-      const index = localTickets.findIndex((t) => t.id === id);
-
-      if (index === -1) {
-        throw new Error("Ticket no encontrado");
-      }
-
-      localTickets.splice(index, 1);
-
-      return {
-        data: { id },
-        status: 200,
-        message: "Ticket eliminado exitosamente",
-      };
+      // Eliminar ticket de los datos locales
+      localTickets = localTickets.filter((ticket) => ticket.id !== id);
     } catch (error) {
       console.error("Error al eliminar ticket:", error);
       throw error;

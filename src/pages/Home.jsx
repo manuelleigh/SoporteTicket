@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useAppContext } from '../context/AppContext';
+import React from "react";
+import { Link } from "react-router-dom";
+import { useAppContext } from "../context/AppContext";
 
 function Home() {
   const { user } = useAppContext();
@@ -13,14 +13,15 @@ function Home() {
           <div className="card-body p-5 text-center">
             <h2 className="mb-3">¡Bienvenido al Sistema de Tickets!</h2>
             <p className="text-muted mb-4">
-              Hola <strong>{user.name}</strong>, gestiona tus tickets de soporte de manera eficiente.
+              Hola <strong>{user.name}</strong>, gestiona tus tickets de soporte
+              de manera eficiente.
             </p>
             <div className="d-flex gap-3 justify-content-center">
               <Link to="/registro" className="btn btn-primary btn-lg">
-                ➕ Crear Nuevo Ticket
+                Crear Nuevo Ticket
               </Link>
               <Link to="/lista" className="btn btn-outline-primary btn-lg">
-                📋 Ver Mis Tickets
+                Ver Mis Tickets
               </Link>
             </div>
           </div>
@@ -31,7 +32,7 @@ function Home() {
           <div className="col-md-4">
             <div className="card h-100 border-0 shadow-sm">
               <div className="card-body text-center">
-                <div className="display-4 mb-3">🎫</div>
+                <div className="display-4 mb-3"></div>
                 <h5>Gestión de Tickets</h5>
                 <p className="text-muted mb-0">
                   Crea y administra tickets de soporte técnico fácilmente
@@ -42,7 +43,7 @@ function Home() {
           <div className="col-md-4">
             <div className="card h-100 border-0 shadow-sm">
               <div className="card-body text-center">
-                <div className="display-4 mb-3">⚡</div>
+                <div className="display-4 mb-3"></div>
                 <h5>Respuesta Rápida</h5>
                 <p className="text-muted mb-0">
                   Seguimiento en tiempo real del estado de tus solicitudes
@@ -53,7 +54,7 @@ function Home() {
           <div className="col-md-4">
             <div className="card h-100 border-0 shadow-sm">
               <div className="card-body text-center">
-                <div className="display-4 mb-3">📊</div>
+                <div className="display-4 mb-3"></div>
                 <h5>Organización</h5>
                 <p className="text-muted mb-0">
                   Categoriza y prioriza tus tickets por importancia
@@ -72,13 +73,16 @@ function Home() {
                 <strong>Crea un ticket:</strong> Describe tu problema o consulta
               </li>
               <li className="mb-2">
-                <strong>Asigna prioridad:</strong> Selecciona la urgencia de tu solicitud
+                <strong>Asigna prioridad:</strong> Selecciona la urgencia de tu
+                solicitud
               </li>
               <li className="mb-2">
-                <strong>Seguimiento:</strong> Revisa el estado en la lista de tickets
+                <strong>Seguimiento:</strong> Revisa el estado en la lista de
+                tickets
               </li>
               <li>
-                <strong>Resolución:</strong> Recibe respuesta del equipo de soporte
+                <strong>Resolución:</strong> Recibe respuesta del equipo de
+                soporte
               </li>
             </ol>
           </div>

@@ -5,6 +5,7 @@ Aplicación web funcional desarrollada con React (JSX) que integra componentes r
 ## 📋 Características Implementadas
 
 ### ✅ Componentes Reutilizables
+
 - **App.jsx**: Componente principal con estructura de la aplicación
 - **Navbar.jsx**: Navegación con enlaces activos
 - **Home.jsx**: Página de inicio con información del sistema
@@ -13,6 +14,7 @@ Aplicación web funcional desarrollada con React (JSX) que integra componentes r
 - **Notifications.jsx**: Sistema de notificaciones toast
 
 ### ✅ Formularios Controlados
+
 - Formulario de registro de tickets con validación en tiempo real
 - Campos controlados con `useState`
 - Validación de campos obligatorios
@@ -21,6 +23,7 @@ Aplicación web funcional desarrollada con React (JSX) que integra componentes r
 - Estilos condicionales (is-valid/is-invalid)
 
 ### ✅ Navegación entre Vistas
+
 - **react-router-dom** configurado con 3 rutas:
   - `/` - Página principal (Home)
   - `/registro` - Crear nuevo ticket (Registro)
@@ -31,28 +34,33 @@ Aplicación web funcional desarrollada con React (JSX) que integra componentes r
 ### ✅ Hooks de React
 
 #### useState
+
 - Estado del formulario en Registro.jsx
 - Estado de tickets en Lista.jsx
 - Estado de carga y errores
 - Estados de filtros y búsqueda
 
 #### useEffect
+
 - Cargar tickets al montar componente
 - Enfocar campo de formulario automáticamente
 - Guardar borrador automáticamente
 - Sincronización con localStorage
 
 #### useRef
+
 - Referencia al campo de título para auto-foco
 - Acceso directo a elementos del DOM
 
 #### useContext
+
 - **AppContext**: Contexto global compartido
   - Información del usuario autenticado
   - Configuración de tema
   - Sistema de notificaciones global
 
 ### ✅ Custom Hook
+
 - **useLocalStorage**: Hook personalizado para persistencia
   - Guarda y recupera datos de localStorage
   - Sincronización entre pestañas
@@ -62,6 +70,7 @@ Aplicación web funcional desarrollada con React (JSX) que integra componentes r
 ### ✅ Consumo de Servicios REST
 
 #### apiService.js
+
 Servicio completo con operaciones CRUD:
 
 - **getAll()**: Obtener todos los tickets
@@ -71,6 +80,7 @@ Servicio completo con operaciones CRUD:
 - **remove(id)**: Eliminar ticket
 
 #### Características:
+
 - Simulación de API REST con delay de red realista
 - Manejo de errores con try/catch
 - Mensajes de confirmación
@@ -78,6 +88,7 @@ Servicio completo con operaciones CRUD:
 - Operación DELETE implementada
 
 ### ✅ Bootstrap
+
 - Bootstrap 5 integrado
 - Componentes: cards, forms, buttons, badges, navbar
 - Sistema de grid responsivo
@@ -85,7 +96,8 @@ Servicio completo con operaciones CRUD:
 - Estilos personalizados adicionales
 
 ### ✅ Validaciones
-- Campos obligatorios marcados con (*)
+
+- Campos obligatorios marcados con (\*)
 - Validación en tiempo real
 - Validación al salir del campo (onBlur)
 - Longitud mínima y máxima
@@ -93,6 +105,7 @@ Servicio completo con operaciones CRUD:
 - Prevención de envío con errores
 
 ### ✅ Funcionalidades Adicionales
+
 - **Filtros**: Por estado, prioridad y búsqueda de texto
 - **Estadísticas**: Contadores de tickets por estado
 - **Edición en línea**: Cambiar estado de tickets
@@ -105,7 +118,7 @@ Servicio completo con operaciones CRUD:
 
 ## 🚀 Tecnologías Utilizadas
 
-- **React 18** (JSX - No TypeScript)
+- **React 18**
 - **React Router DOM** - Navegación
 - **Bootstrap 5** - Estilos
 - **Axios** - Cliente HTTP
@@ -137,12 +150,14 @@ Servicio completo con operaciones CRUD:
 ## 🎯 Funcionalidades por Página
 
 ### Home (/)
+
 - Bienvenida personalizada
 - Tarjetas informativas
 - Botones de acceso rápido
 - Explicación del funcionamiento
 
 ### Registro (/registro)
+
 - Formulario controlado completo
 - 5 campos: Título, Descripción, Categoría, Prioridad, Usuario
 - Validación en tiempo real
@@ -152,6 +167,7 @@ Servicio completo con operaciones CRUD:
 - Botones: Crear y Limpiar
 
 ### Lista (/lista)
+
 - Listado de tickets en cards
 - Filtros múltiples (estado, prioridad, búsqueda)
 - Estadísticas en tiempo real
@@ -173,7 +189,7 @@ Servicio completo con operaciones CRUD:
 
 ## 📝 Notas de Implementación
 
-- **Todo en JSX**: No se usa TypeScript (.tsx)
+- **Todo en JSX**
 - **API Simulada**: Los datos se almacenan en memoria
 - **Validación Completa**: Todos los campos son validados
 - **Props**: Comunicación entre componentes padre-hijo
