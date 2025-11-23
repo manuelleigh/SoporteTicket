@@ -1,34 +1,7 @@
 import axios from "axios";
 
-let localTickets = [];
-let nextId = 1;
-
-const initializeTickets = () => {
-  if (localTickets.length === 0) {
-    localTickets = [
-      {
-        id: nextId++,
-        titulo: "Error en login",
-        descripcion: "No puedo iniciar sesión en el sistema",
-        categoria: "tecnico",
-        prioridad: "alta",
-        estado: "abierto",
-        fecha: new Date().toISOString(),
-        usuario: "Usuario Demo",
-      },
-      {
-        id: nextId++,
-        titulo: "Consulta sobre facturación",
-        descripcion: "Necesito información sobre mi última factura",
-        categoria: "facturacion",
-        prioridad: "media",
-        estado: "en-progreso",
-        fecha: new Date(Date.now() - 86400000).toISOString(),
-        usuario: "Usuario Demo",
-      },
-    ];
-  }
-};
+const BASE_URL = "http://localhost:5000"; // URL del servidor JSON
+const LOCAL_STORAGE_KEY = "tickets"; // Clave para almacenar los tickets en localStorage
 
 const apiService = {
   /**
@@ -37,43 +10,18 @@ const apiService = {
    */
   getAll: async () => {
     try {
-      // Simular delay de red
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      initializeTickets();
-
-      // Devolver copia de los tickets locales
-      return {
-        data: [...localTickets],
-        status: 200,
-      };
-    } catch (error) {
-      console.error("Error al obtener tickets:", error);
-      throw error;
-    }
-  },
-
-  /**
-   * Obtener un ticket por ID
-   * @param {number} id - ID del ticket
-   * @returns {Promise<Object>} Ticket encontrado
-   */
-  getById: async (id) => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      const ticket = localTickets.find((t) => t.id === id);
-
-      if (!ticket) {
-        throw new Error("Ticket no encontrado");
+      // Verificar si los datos están en localStorage
+      const cachedTickets = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (cachedTickets) {
+        return JSON.parse(cachedTickets);
       }
 
-      return {
-        data: ticket,
-        status: 200,
-      };
+      // Si no están en localStorage, obtenerlos del servidor
+      const response = await axios.get(`${BASE_URL}/tickets`);
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(response.data)); // Guardar en localStorage
+      return response.data;
     } catch (error) {
-      console.error("Error al obtener ticket:", error);
+      console.error("Error al obtener los tickets:", error);
       throw error;
     }
   },
@@ -85,57 +33,17 @@ const apiService = {
    */
   add: async (ticketData) => {
     try {
-      // Simular delay de red
-      await new Promise((resolve) => setTimeout(resolve, 600));
+      const response = await axios.post(`${BASE_URL}/tickets`, ticketData);
 
-      const newTicket = {
-        id: nextId++,
-        ...ticketData,
-        estado: "abierto",
-        fecha: new Date().toISOString(),
-      };
+      // Actualizar localStorage
+      const cachedTickets =
+        JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || [];
+      cachedTickets.push(response.data);
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(cachedTickets));
 
-      localTickets.push(newTicket);
-
-      return {
-        data: newTicket,
-        status: 201,
-        message: "Ticket creado exitosamente",
-      };
+      return response.data;
     } catch (error) {
-      console.error("Error al crear ticket:", error);
-      throw error;
-    }
-  },
-
-  /**
-   * Actualizar un ticket existente
-   * @param {number} id - ID del ticket
-   * @param {Object} ticketData - Datos actualizados
-   * @returns {Promise<Object>} Ticket actualizado
-   */
-  update: async (id, ticketData) => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 600));
-
-      const index = localTickets.findIndex((t) => t.id === id);
-
-      if (index === -1) {
-        throw new Error("Ticket no encontrado");
-      }
-
-      localTickets[index] = {
-        ...localTickets[index],
-        ...ticketData,
-      };
-
-      return {
-        data: localTickets[index],
-        status: 200,
-        message: "Ticket actualizado exitosamente",
-      };
-    } catch (error) {
-      console.error("Error al actualizar ticket:", error);
+      console.error("Error al crear el ticket:", error);
       throw error;
     }
   },
@@ -147,13 +55,40 @@ const apiService = {
    */
   remove: async (id) => {
     try {
-      // Simular delay de red
-      await new Promise((resolve) => setTimeout(resolve, 600));
+      await axios.delete(`${BASE_URL}/tickets/${id}`);
 
-      // Eliminar ticket de los datos locales
-      localTickets = localTickets.filter((ticket) => ticket.id !== id);
+      // Actualizar localStorage
+      const cachedTickets =
+        JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || [];
+      const updatedTickets = cachedTickets.filter((ticket) => ticket.id !== id);
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedTickets));
     } catch (error) {
-      console.error("Error al eliminar ticket:", error);
+      console.error("Error al eliminar el ticket:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Actualizar un ticket por ID
+   * @param {number} id - ID del ticket a actualizar
+   * @param {Object} ticketData - Datos actualizados del ticket
+   * @returns {Promise<Object>} Ticket actualizado
+   */
+  update: async (id, ticketData) => {
+    try {
+      const response = await axios.put(`${BASE_URL}/tickets/${id}`, ticketData);
+
+      // Actualizar localStorage
+      const cachedTickets =
+        JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || [];
+      const updatedTickets = cachedTickets.map((ticket) =>
+        ticket.id === id ? { ...ticket, ...ticketData } : ticket
+      );
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedTickets));
+
+      return response.data;
+    } catch (error) {
+      console.error("Error al actualizar el ticket:", error);
       throw error;
     }
   },
