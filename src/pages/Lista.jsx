@@ -28,11 +28,23 @@ function Lista() {
     setLoading(true);
     setError(null);
     try {
-      const response = await apiService.getAll();
-      setTickets(response.data);
+      const response = await apiService.getAll(true); // Forzar recarga desde el servidor
+
+      // Validar que la respuesta sea un arreglo
+      if (Array.isArray(response)) {
+        setTickets(response);
+      } else {
+        console.error(
+          "La respuesta de apiService.getAll no es un arreglo:",
+          response
+        );
+        setTickets([]); // Asignar un arreglo vacío si la respuesta no es válida
+        setError("Error: La respuesta de la API no es válida.");
+      }
     } catch (err) {
       setError("Error al cargar los tickets");
       addNotification("Error al cargar los tickets", "danger");
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -70,20 +82,22 @@ function Lista() {
     }
   };
 
-  // Filtrar tickets
-  const ticketsFiltrados = tickets.filter((ticket) => {
-    const coincideBusqueda =
-      ticket.titulo.toLowerCase().includes(busqueda.toLowerCase()) ||
-      ticket.descripcion.toLowerCase().includes(busqueda.toLowerCase());
+  // Asegurar que tickets sea un arreglo antes de filtrar
+  const ticketsFiltrados = Array.isArray(tickets)
+    ? tickets.filter((ticket) => {
+        const coincideBusqueda =
+          ticket.titulo.toLowerCase().includes(busqueda.toLowerCase()) ||
+          ticket.descripcion.toLowerCase().includes(busqueda.toLowerCase());
 
-    const coincideEstado =
-      filtroEstado === "todos" || ticket.estado === filtroEstado;
+        const coincideEstado =
+          filtroEstado === "todos" || ticket.estado === filtroEstado;
 
-    const coincidePrioridad =
-      filtroPrioridad === "todos" || ticket.prioridad === filtroPrioridad;
+        const coincidePrioridad =
+          filtroPrioridad === "todos" || ticket.prioridad === filtroPrioridad;
 
-    return coincideBusqueda && coincideEstado && coincidePrioridad;
-  });
+        return coincideBusqueda && coincideEstado && coincidePrioridad;
+      })
+    : [];
 
   // Función para obtener badge de estado
   const getBadgeEstado = (estado) => {

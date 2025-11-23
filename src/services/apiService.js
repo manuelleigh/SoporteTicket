@@ -1,24 +1,25 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000"; // URL del servidor JSON
-const LOCAL_STORAGE_KEY = "tickets"; // Clave para almacenar los tickets en localStorage
+const BASE_URL = "http://localhost:5000";
+const LOCAL_STORAGE_KEY = "tickets";
 
 const apiService = {
   /**
    * Obtener todos los tickets
-   * @returns {Promise<Array>} Lista de tickets
+   * @param {boolean} forceRefresh
+   * @returns {Promise<Array>}
    */
-  getAll: async () => {
+  getAll: async (forceRefresh = false) => {
     try {
-      // Verificar si los datos están en localStorage
-      const cachedTickets = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (cachedTickets) {
-        return JSON.parse(cachedTickets);
+      if (!forceRefresh) {
+        const cachedTickets = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (cachedTickets) {
+          return JSON.parse(cachedTickets);
+        }
       }
 
-      // Si no están en localStorage, obtenerlos del servidor
       const response = await axios.get(`${BASE_URL}/tickets`);
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(response.data)); // Guardar en localStorage
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(response.data));
       return response.data;
     } catch (error) {
       console.error("Error al obtener los tickets:", error);
@@ -28,14 +29,24 @@ const apiService = {
 
   /**
    * Crear un nuevo ticket
-   * @param {Object} ticketData - Datos del nuevo ticket
-   * @returns {Promise<Object>} Ticket creado
+   * @param {Object} ticketData
+   * @returns {Promise<Object>}
    */
   add: async (ticketData) => {
     try {
-      const response = await axios.post(`${BASE_URL}/tickets`, ticketData);
+      const newTicket = {
+        titulo: ticketData.titulo || "Título no especificado",
+        descripcion: ticketData.descripcion || "Descripción no especificada",
+        categoria: ticketData.categoria || "general",
+        prioridad: ticketData.prioridad || "media",
+        estado: ticketData.estado || "abierto",
+        fecha: ticketData.fecha || new Date().toISOString(),
+        usuario: ticketData.usuario || "Usuario Anónimo",
+        ...ticketData,
+      };
 
-      // Actualizar localStorage
+      const response = await axios.post(`${BASE_URL}/tickets`, newTicket);
+
       const cachedTickets =
         JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || [];
       cachedTickets.push(response.data);
@@ -50,8 +61,8 @@ const apiService = {
 
   /**
    * Eliminar un ticket por ID
-   * @param {number} id - ID del ticket a eliminar
-   * @returns {Promise<void>} Confirmación de eliminación
+   * @param {number} id
+   * @returns {Promise<void>}
    */
   remove: async (id) => {
     try {
@@ -70,19 +81,44 @@ const apiService = {
 
   /**
    * Actualizar un ticket por ID
-   * @param {number} id - ID del ticket a actualizar
-   * @param {Object} ticketData - Datos actualizados del ticket
-   * @returns {Promise<Object>} Ticket actualizado
+   * @param {number} id
+   * @param {Object} ticketData
+   * @returns {Promise<Object>}
    */
   update: async (id, ticketData) => {
     try {
-      const response = await axios.put(`${BASE_URL}/tickets/${id}`, ticketData);
-
-      // Actualizar localStorage
       const cachedTickets =
         JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || [];
+      const existingTicket =
+        cachedTickets.find((ticket) => ticket.id === id) || {};
+
+      const updatedTicket = {
+        titulo:
+          ticketData.titulo ||
+          existingTicket.titulo ||
+          "Título no especificado",
+        descripcion:
+          ticketData.descripcion ||
+          existingTicket.descripcion ||
+          "Descripción no especificada",
+        categoria:
+          ticketData.categoria || existingTicket.categoria || "general",
+        prioridad: ticketData.prioridad || existingTicket.prioridad || "media",
+        estado: ticketData.estado || existingTicket.estado || "abierto",
+        fecha:
+          ticketData.fecha || existingTicket.fecha || new Date().toISOString(),
+        usuario:
+          ticketData.usuario || existingTicket.usuario || "Usuario Anónimo",
+        ...ticketData,
+      };
+
+      const response = await axios.put(
+        `${BASE_URL}/tickets/${id}`,
+        updatedTicket
+      );
+
       const updatedTickets = cachedTickets.map((ticket) =>
-        ticket.id === id ? { ...ticket, ...ticketData } : ticket
+        ticket.id === id ? { ...ticket, ...updatedTicket } : ticket
       );
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedTickets));
 

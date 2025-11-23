@@ -1,7 +1,7 @@
 {
   "tickets": [
     {
-      "id": 1,
+      "id": "1",
       "titulo": "Error en login",
       "descripcion": "No puedo iniciar sesión en el sistema",
       "categoria": "tecnico",
@@ -11,13 +11,23 @@
       "usuario": "Usuario Demo"
     },
     {
-      "id": 2,
-      "titulo": "Consulta sobre facturación",
-      "descripcion": "Necesito información sobre mi última factura",
-      "categoria": "facturacion",
-      "prioridad": "media",
+      "titulo": "Error al momento de intentar Ingresar a la Intranet",
+      "descripcion": "Error al momento de intentar Ingresar a la Intranet",
+      "categoria": "tecnico",
+      "prioridad": "baja",
       "estado": "en-progreso",
-      "fecha": "2025-11-19T15:30:00Z",
+      "fecha": "2025-11-23T01:34:18.281Z",
+      "usuario": "Usuario Demo",
+      "id": "7bdf"
+    },
+    {
+      "id": "0cb4",
+      "titulo": "Error al Iniciar sesión en PC",
+      "descripcion": "Error al Iniciar sesión en PC",
+      "categoria": "bug",
+      "prioridad": "media",
+      "estado": "abierto",
+      "fecha": "2025-11-23T01:48:10.455Z",
       "usuario": "Usuario Demo"
     }
   ]
